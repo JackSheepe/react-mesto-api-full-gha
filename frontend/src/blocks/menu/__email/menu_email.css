@@ -1,0 +1,8 @@
+.menu__email {
+}
+
+@media (max-width: 700px) {
+  .menu__email {
+    display: block;
+  }
+}

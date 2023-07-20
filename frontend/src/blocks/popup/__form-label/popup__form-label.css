@@ -1,0 +1,5 @@
+.popup__form-label {
+  position: relative;
+  display: grid;
+  grid-template-rows: min-content minmax(30px, max-content);
+}

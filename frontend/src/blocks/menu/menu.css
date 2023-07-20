@@ -1,0 +1,10 @@
+.menu {
+  color: white;
+  margin-left: auto;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+}
+
+@media screen and (max-width: 700px) {
+}

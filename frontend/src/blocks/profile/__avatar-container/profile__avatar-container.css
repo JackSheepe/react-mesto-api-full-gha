@@ -1,0 +1,23 @@
+.profile__avatar-container {
+  max-width: 120px;
+  max-height: 120px;
+  border-radius: 50%;
+  margin-right: 30px;
+  transition: 300ms ease-in-out;
+}
+
+.profile__avatar-container:hover::after {
+  content: url(../../../images/avatar-edit.svg);
+  position: relative;
+  top: -60%;
+  left: 40%;
+  pointer-events: none;
+}
+
+@media (max-width: 856px) {
+  .profile__avatar-container {
+    align-self: center;
+    margin-bottom: 26px;
+    margin-right: 0;
+  }
+}

@@ -1,0 +1,16 @@
+.elements__delete {
+  position: relative;
+  width: 18px;
+  height: 19px;
+  background: url(../../../images/delete.svg) no-repeat center;
+  border-radius: 0;
+  bottom: calc(100% - 40px);
+  left: calc(100% - 40px);
+  border: none;
+  transition: 300ms ease-in-out;
+  cursor: pointer;
+}
+
+.elements__delete:hover {
+  opacity: 0.6;
+}

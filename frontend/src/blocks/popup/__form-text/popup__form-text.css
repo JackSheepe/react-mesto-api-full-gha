@@ -1,0 +1,13 @@
+.popup__form-text {
+  background: none;
+  width: 100%;
+  color: black;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  font-family: inherit;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  padding-bottom: 9px;
+  margin: 0;
+}

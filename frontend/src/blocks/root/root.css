@@ -1,0 +1,7 @@
+.root {
+  min-height: 100vh;
+  font-family: "Inter", ‘Arial’, sans-serif;
+  background-color: black;
+  color: white;
+  margin: 0;
+}
