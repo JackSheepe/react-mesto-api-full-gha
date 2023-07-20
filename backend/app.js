@@ -40,6 +40,12 @@ const loginValidator = celebrate({
 
 app.use(requestLogger);
 
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+}); 
+
 app.post("/signin", createUserValidator, login);
 app.post("/signup", loginValidator, createUser);
 
