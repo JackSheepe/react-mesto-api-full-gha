@@ -90,9 +90,8 @@ export default class Api {
 }
 
 export const api = new Api({
-  baseUrl: "https://mesto.pesto.nomoredomains.xyz",
+  baseUrl: "http://localhost:3000",
   headers: {
-    authorization: "d64a3265-70b5-488d-a026-a7476e12b035",
     "Content-Type": "application/json",
   },
 });

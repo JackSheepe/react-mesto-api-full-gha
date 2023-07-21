@@ -27,7 +27,6 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: [true, "Поле name должно быть заполнено"],
       unique: true,
       validate: {
         validator: (value) => validator.isEmail(value),
@@ -37,7 +36,6 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       minlength: [8, "Минимальная длина поля пароль - 8"],
-      required: [true, "Поле name должно быть заполнено"],
       select: false,
     },
   },

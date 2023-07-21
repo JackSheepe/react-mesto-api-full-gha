@@ -55,8 +55,6 @@ module.exports.createUser = (req, res, next) => {
       return res.status(201).send(userData);
     })
     .catch(next);
-
-  return next();
 };
 
 module.exports.updateProfile = (req, res, next) => {
@@ -102,7 +100,7 @@ module.exports.updateAvatar = (req, res, next) => {
 };
 
 module.exports.login = (req, res, next) => {
-  const { email, password } = req.body;
+  const { password, email } = req.body;
 
   return User.findUserByCredentials(email, password)
     .then((user) => {

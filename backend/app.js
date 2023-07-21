@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
@@ -15,6 +16,11 @@ const app = express();
 app.use(helmet());
 app.use(bodyParser.json());
 const { PORT = 3000 } = process.env;
+const corsOptions = {
+  origin: "http://localhost:3001",
+  optionsSuccessStatus: 200,
+  credentials: true,
+};
 
 mongoose.connect("mongodb://127.0.0.1:27017/mestodb", {
   useNewUrlParser: true,
@@ -38,13 +44,9 @@ const loginValidator = celebrate({
   }),
 });
 
-app.use(requestLogger);
+app.use(cors(corsOptions));
 
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-}); 
+app.use(requestLogger);
 
 app.post("/signin", createUserValidator, login);
 app.post("/signup", loginValidator, createUser);
