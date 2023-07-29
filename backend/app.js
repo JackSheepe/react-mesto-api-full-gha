@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -12,17 +13,19 @@ const {
 } = require("./controllers/users");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
 
+const { DB_ADRESS } = process.env;
+
 const app = express();
 app.use(helmet());
 app.use(bodyParser.json());
 const { PORT = 3000 } = process.env;
 const corsOptions = {
-  origin: "http://localhost:3001",
+  origin: ["http://localhost:3001", "https://mesto.pesto.nomoredomains.xyz"],
   optionsSuccessStatus: 200,
   credentials: true,
 };
 
-mongoose.connect("mongodb://127.0.0.1:27017/mestodb", {
+mongoose.connect(DB_ADRESS, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });

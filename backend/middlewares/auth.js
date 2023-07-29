@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 const { CustomError } = require("./errorHandler");
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 const extractBearerToken = (header) => header.replace("Bearer ", "");
 
 module.exports = (req, res, next) => {
@@ -17,7 +19,7 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(
       token,
-      "6d7a0ce2469313600d7bf16c36f83a4f0a051ca3de3e327da75160cdc3eca245",
+      NODE_ENV === "production" ? JWT_SECRET : "dev-secret",
     );
   } catch (err) {
     const customError = new CustomError(401, "Токен неверен или истёк срок хранения");
