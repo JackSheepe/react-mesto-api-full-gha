@@ -9,8 +9,8 @@
 
 ## Ссылки на проект
 
-IP-адрес x.x.x.x
+IP-адрес 158.160.40.177
 
-Frontend https://...
+Frontend https://mesto.pesto.nomoredomains.xyz/
 
-Backend https://...
+Backend https://api.mesto.pesto.nomoredomains.xyz/
