@@ -51,23 +51,58 @@ function App() {
   const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
-    api
+    tokenCheck(jwt);
+  }, [loggedIn, jwt]);
+
+  const tokenCheck = (jwt) => {
+    console.log(jwt);
+    if (jwt) {
+      Auth.getUser(jwt)
+        .then((res) => {
+          setEmail(res.email);
+          setLoggedIn(true);
+          setIsRegisterSucces(true);
+          navigate("/", { replace: true });
+        })
+        .catch(console.error);
+    } else {
+      setLoggedIn(false);
+    }
+  };
+
+  function handleLogin(email, password) {
+    Auth.login(email, password)
+      .then((res) => {
+        console.log(res);
+        localStorage.setItem("token", res.token);
+        navigate("/", { replace: true });
+        setIsRegisterSucces(true);
+      })
+      .catch(console.error);
+  }
+
+  React.useEffect(() => {
+    if (jwt) {
+      api
       .getInitialCards()
       .then((data) => {
         setCards(data);
       })
       .catch(console.error);
-  }, []);
+    }
+  }, [loggedIn]);
 
   React.useEffect(() => {
-    api
+    if(jwt) {
+      api
       .getUserInfo()
       .then((data) => {
         setCurrentUser(data);
         console.log(data);
       })
-      .catch(console.error);
-  }, []);
+      .catch(console.error); 
+    }
+  }, [loggedIn]);
 
   React.useEffect(() => {
     function closeByEscape(evt) {
@@ -168,36 +203,6 @@ function App() {
   function handleAccExit() {
     localStorage.removeItem("token");
     setLoggedIn(false);
-  }
-
-  React.useEffect(() => {
-    tokenCheck(jwt);
-  }, [loggedIn, jwt]);
-
-  const tokenCheck = (jwt) => {
-    console.log(jwt);
-    if (jwt) {
-      Auth.getUser(jwt)
-        .then((res) => {
-          setEmail(res.data.email);
-          setLoggedIn(true);
-          navigate("/", { replace: true });
-        })
-        .catch(console.error);
-    } else {
-      setLoggedIn(false);
-    }
-  };
-
-  function handleLogin(email, password) {
-    Auth.login(email, password)
-      .then((res) => {
-        console.log(res);
-        localStorage.setItem("token", res.token);
-        navigate("/");
-        setIsRegisterSucces(true);
-      })
-      .catch(console.error);
   }
 
   return (

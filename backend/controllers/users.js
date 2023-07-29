@@ -73,6 +73,7 @@ module.exports.updateProfile = (req, res, next) => {
       const userData = {
         name: user.name,
         about: user.about,
+        avatar: user.avatar,
       };
       return res.status(200).json(userData);
     })
@@ -92,6 +93,8 @@ module.exports.updateAvatar = (req, res, next) => {
         throw new CustomError(404, "Пользователь с указанным _id не найден");
       }
       const userData = {
+        name: user.name,
+        about: user.about,
         avatar: user.avatar,
       };
       return res.status(200).json(userData);
@@ -106,13 +109,15 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, "6d7a0ce2469313600d7bf16c36f83a4f0a051ca3de3e327da75160cdc3eca245", { expiresIn: "7d" });
 
-      res
-        .cookie("jwt", token, {
-          maxAge: 3600000,
-          httpOnly: true,
-          sameSite: true,
-        })
-        .send("Авторизация прошла успешно!");
+      // res
+      //   .cookie("jwt", token, {
+      //     maxAge: 3600000,
+      //     httpOnly: true,
+      //     sameSite: true,
+      //   })
+      //   .send({ message: "Авторизация прошла успешно!" });
+
+      res.status(200).send({ token });
     })
     .catch(next);
 };

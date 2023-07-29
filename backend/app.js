@@ -29,9 +29,9 @@ mongoose.connect("mongodb://127.0.0.1:27017/mestodb", {
 
 const createUserValidator = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30).required(),
-    about: Joi.string().min(2).max(30).required(),
-    avatar: Joi.string().pattern(/^https?:\/\/\w+(\.\w+)*(:\d+)?(\/.*)?$/).required(),
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().pattern(/^https?:\/\/\w+(\.\w+)*(:\d+)?(\/.*)?$/),
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
   }),
@@ -48,8 +48,8 @@ app.use(cors(corsOptions));
 
 app.use(requestLogger);
 
-app.post("/signin", createUserValidator, login);
-app.post("/signup", loginValidator, createUser);
+app.post("/signin", loginValidator, login);
+app.post("/signup", createUserValidator, createUser);
 
 app.use(auth);
 
