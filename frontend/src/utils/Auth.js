@@ -1,4 +1,4 @@
-export const BASE_URL = "https ://api.mesto.pesto.nomoredomains.xyz";
+export const BASE_URL = "https://api.mesto.pesto.nomoredomains.xyz";
 
 function _getResponseData(res) {
   if (!res.ok) {
