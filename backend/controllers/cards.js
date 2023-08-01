@@ -1,5 +1,5 @@
 const Card = require("../models/card");
-const { CustomError } = require("../middlewares/errorHandler");
+const { BadRequestErr, NotFoundErr, ForbiddenErr } = require("../middlewares/customErrors");
 
 module.exports.getAllCards = (req, res, next) => {
   Card.find({})
@@ -12,7 +12,13 @@ module.exports.createCard = (req, res, next) => {
   const owner = req.user._id;
   Card.create({ name, link, owner })
     .then((card) => res.status(201).send(card))
-    .catch(next);
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        next(new BadRequestErr("Переданны некорректные данные"));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.deleteCard = (req, res, next) => {
@@ -20,25 +26,18 @@ module.exports.deleteCard = (req, res, next) => {
   Card.findById(cardId)
     .then((card) => {
       if (!card) {
-        throw new CustomError(404, "Карточка с указанным _id не найдена");
+        throw new NotFoundErr("Карточка с указанным _id не найдена");
       }
-
       if (req.user._id.toString() !== card.owner.toString()) {
-        throw new CustomError(
-          403,
-          "Недостаточно прав для выполнения операции",
-        );
+        throw new ForbiddenErr("Недостаточно прав для выполнения операции");
       }
-
       Card.findByIdAndDelete(cardId)
-        .then((deletedCard) => {
+        .then(() => {
           res.send({ message: "Карточка удалена" });
         })
         .catch(next);
     })
-    .catch((error) => {
-      next(error);
-    });
+    .catch(next);
 };
 
 module.exports.likeCard = (req, res, next) => {
@@ -50,7 +49,7 @@ module.exports.likeCard = (req, res, next) => {
   )
     .then((updatedCard) => {
       if (!updatedCard) {
-        throw new CustomError(404, "Передан несуществующий _id");
+        throw new NotFoundErr("Передан несуществующий _id");
       } else {
         res.send(updatedCard);
       }
@@ -67,7 +66,7 @@ module.exports.dislikeCard = (req, res, next) => {
   )
     .then((updatedCard) => {
       if (!updatedCard) {
-        throw new CustomError(404, "Передан несуществующий _id карточки");
+        throw new NotFoundErr("Передан несуществующий _id карточки");
       }
       return res.send(updatedCard);
     })

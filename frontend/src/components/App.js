@@ -74,11 +74,21 @@ function App() {
     Auth.login(email, password)
       .then((res) => {
         console.log(res);
-        localStorage.setItem("token", res.token);
-        navigate("/", { replace: true });
-        setIsRegisterSucces(true);
+        if (res.error) {
+          setIsInfoToolTipOpen(true)
+          setIsRegisterSucces(false)
+        } else {
+          console.log(res);
+          localStorage.setItem("token", res.token);
+          navigate("/", { replace: true });
+          setIsRegisterSucces(true);
+        }
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+        setIsInfoToolTipOpen(true)
+        setIsRegisterSucces(false)
+      });
   }
 
   React.useEffect(() => {
@@ -147,7 +157,7 @@ function App() {
 
   function handleCardLike(card, setCards) {
     // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i === currentUser._id);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
     api

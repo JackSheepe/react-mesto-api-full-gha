@@ -12,7 +12,7 @@ const {
 
 const cardCreateSchema = Joi.object().keys({
   name: Joi.string().min(2).max(30).required(),
-  link: Joi.string().pattern(/^https?:\/\/\w+(\.\w+)*(:\d+)?(\/.*)?$/).required(),
+  link: Joi.string().pattern(/^https?:\/\/\w+(\.\w+)*(\.\w+)+(:\d+)?(\/.*)?$/).required(),
 });
 
 const cardIdValidator = celebrate({

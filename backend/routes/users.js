@@ -19,7 +19,7 @@ const userUpdateSchema = Joi.object().keys({
 });
 
 const avatarUpdateSchema = Joi.object().keys({
-  avatar: Joi.string().pattern(/^https?:\/\/\w+(\.\w+)*(:\d+)?(\/.*)?$/).required(),
+  avatar: Joi.string().pattern(/^https?:\/\/\w+(\.\w+)*(\.\w+)+(:\d+)?(\/.*)?$/).required(),
 });
 
 router.get("/", getAllUsers);

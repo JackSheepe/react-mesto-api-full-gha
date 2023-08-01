@@ -5,7 +5,8 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const { celebrate, Joi, errors } = require("celebrate");
-const { CustomError, errorHandler } = require("./middlewares/errorHandler");
+const { errorHandler } = require("./middlewares/errorHandler");
+const { NotFoundErr } = require("./middlewares/customErrors");
 const auth = require("./middlewares/auth");
 const {
   login,
@@ -34,7 +35,7 @@ const createUserValidator = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(/^https?:\/\/\w+(\.\w+)*(:\d+)?(\/.*)?$/),
+    avatar: Joi.string().pattern(/^https?:\/\/\w+(\.\w+)*(\.\w+)+(:\d+)?(\/.*)?$/),
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
   }),
@@ -59,12 +60,12 @@ app.use(auth);
 app.use("/users", require("./routes/users"));
 app.use("/cards", require("./routes/cards"));
 
-app.use(errorLogger);
-
 app.use((req, res, next) => {
-  const customError = new CustomError(404, "Not found");
-  next(customError);
+  const notFoundErr = new NotFoundErr("Not found");
+  next(notFoundErr);
 });
+
+app.use(errorLogger);
 
 app.use(errors());
 app.use(errorHandler);

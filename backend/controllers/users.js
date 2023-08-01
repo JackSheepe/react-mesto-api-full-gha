@@ -1,7 +1,7 @@
 const { isValidObjectId } = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { CustomError } = require("../middlewares/errorHandler");
+const { BadRequestErr, NotFoundErr, ConflictErr } = require("../middlewares/customErrors");
 const User = require("../models/user");
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -16,14 +16,14 @@ module.exports.getUserById = (req, res, next) => {
   const { userId } = req.params;
 
   if (!isValidObjectId(userId)) {
-    const customError = new CustomError(400, "Неверный формат _id");
+    const customError = new BadRequestErr("Неверный формат _id");
     return next(customError);
   }
 
   return User.findById(userId)
     .then((user) => {
       if (!user) {
-        throw new CustomError(404, "Пользователь по указанному _id не найден");
+        throw new NotFoundErr("Пользователь по указанному _id не найден");
       }
       return res.status(200).json(user);
     })
@@ -56,7 +56,15 @@ module.exports.createUser = (req, res, next) => {
       };
       return res.status(201).send(userData);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.code === 11000) {
+        next(new ConflictErr("Пользователь с таким Email уже существует"));
+      } else if (err.name === "ValidationError") {
+        next(new BadRequestErr(`${Object.values(err.errors).map((error) => error.message).join(", ")}`));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.updateProfile = (req, res, next) => {
@@ -70,16 +78,23 @@ module.exports.updateProfile = (req, res, next) => {
   )
     .then((user) => {
       if (!user) {
-        throw new CustomError(404, "Пользователь с указанным _id не найден");
+        throw new NotFoundErr("Пользователь с указанным _id не найден");
       }
       const userData = {
         name: user.name,
         about: user.about,
         avatar: user.avatar,
+        _id: user._id,
       };
       return res.status(200).json(userData);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        next(new BadRequestErr("Переданны некорректные данные"));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.updateAvatar = (req, res, next) => {
@@ -92,16 +107,23 @@ module.exports.updateAvatar = (req, res, next) => {
   )
     .then((user) => {
       if (!user) {
-        throw new CustomError(404, "Пользователь с указанным _id не найден");
+        throw new NotFoundErr("Пользователь с указанным _id не найден");
       }
       const userData = {
         name: user.name,
         about: user.about,
         avatar: user.avatar,
+        _id: user._id,
       };
       return res.status(200).json(userData);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        next(new BadRequestErr("Переданны некорректные данные"));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.login = (req, res, next) => {
@@ -128,7 +150,7 @@ module.exports.getUserMe = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        throw new CustomError(404, "Пользователь не найден");
+        throw new NotFoundErr("Пользователь не найден");
       }
       return res.send(user);
     })
